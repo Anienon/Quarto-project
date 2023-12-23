@@ -1,0 +1,128 @@
+//2. bot prototyp
+#include <iostream>
+#include <ctime>
+#include <string>
+
+using namespace std;
+
+// funkcja sprawdzajaca wykorzystanie pionka wczesniej
+int spr_wykorzystania(char postawione[17], int pionek, char pionki[16])
+{
+    for(int i = 0; i < 17; i++)
+    {
+        if(pionki[pionek] == postawione[i]) return 0;
+    }
+    return 1;
+}
+
+int spr_zwyciestwa(char plansza[4][4])
+{
+	int counter = 0; //ilosc zwyciestw 
+	char sprawdzenie;
+	for(int i = 0 ; i < 4; i++)
+	{
+		for(int j = 0; j < 0; j++) //bierzemy jakies pole
+		{
+			if(plansza[i][j] != -1) //jesli niepuste
+			{	
+				sprawdzenie == plansza[i][j];
+				for(int k = 0 ; k < 4 ; k++) //sprawdzamy czy istnieje warunek zwyciestwa dla pionka pionowo
+				{
+					if(k != j)
+					{
+						sprawdzenie ^= plansza[i][k];
+						sprawdzenie ^= 15; //negacja bitowa 
+					}
+					
+				}
+				
+				for(int k = 0 ; k < 4 ; k++) //sprawdzamy czy istnieje warunek zwyciestwa dla pionka poziomo
+				{
+					if(k != i)
+					{
+						sprawdzenie ^= plansza[k][j];
+						sprawdzenie ^= 15; //negacja bitowa 
+					}
+					
+				}
+				
+				if(i == j) //jesli na ukosie
+				{
+					for(int k = 0 ; k < 4 ; k++) //sprawdzamy czy istnieje warunek zwyciestwa dla pionka poziomo
+					{
+						if(k != i && k != j)
+						{
+							sprawdzenie ^= plansza[k][k];
+							sprawdzenie ^= 15; //negacja bitowa 
+						}
+					
+					}
+				}
+				
+				
+				if(sprawdzenie) != 0 counter++;
+				
+			}
+		}
+	}
+	return counter;
+}
+int main(int argc, char *argv[])
+{
+    char plansza[4][4], postawione[17];
+    char pionki[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+    int licznik = 0;
+    for(int i = 1; i < 16; i++)
+        postawione[i] = '-1';
+
+    // "Wizualizujemy" plansze w tablicy: plansza. Zapisujemy, ktore figury zostaly juz wykorzzystane.
+    for(int i = 0; i < 4; i++)
+        for(int j = 0; j < 4; j++)
+        {
+            plansza[i][j] = argv[1][licznik];
+            if(argv[1][licznik] != 'p')
+                postawione[licznik] = argv[1][licznik];
+            licznik++;
+        }
+    postawione[licznik] = argv[1][licznik];
+    srand(time(NULL));
+    
+    
+    
+    
+    int wiersz, kolumna, pionek;
+    
+  /*  for(int i = 0, i < 17, i++)
+    {
+    	pionek = pionki[i];
+    	if(spr_wykorzystania(postawione, pionek, pionki) == 1)
+    	{
+    		for(int j = 0, j < 4 ; j++)
+    		{
+    			for(int k = 0; k < 4 ; k++)
+    			{
+    				if(plansza[j][k] == -1)
+    				{
+						plansza[j][k] = pionek;
+					}
+				}
+			}
+		}
+    	
+	}
+	*/
+	
+    do
+    {
+        wiersz = rand() % 4;
+        kolumna = rand() % 4;
+    } while(plansza[wiersz][kolumna] != 'p');
+
+    do{
+        pionek = rand()%16;
+    } while(spr_wykorzystania(postawione,pionek, pionki) == 0);
+
+
+    cout << wiersz << kolumna << pionki[pionek] << "\n";
+    return 0;
+}
